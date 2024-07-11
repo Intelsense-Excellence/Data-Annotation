@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -14,13 +15,14 @@
     .card {
         background-color: rgba(211, 211, 211, 0.62);
     }
-    .btn{
+
+    .btn {
         background-color: rgba(211, 211, 211, 0.62);
         color: black;
         padding: 10px;
     }
-    
-    .btn:hover{
+
+    .btn:hover {
         background-color: green;
         color: white;
     }
@@ -35,10 +37,13 @@
         {% for single in data %}
 
 
-            <form action="{% url 'home' %}" method="post">
-                {% csrf_token %}
-                <div class="container">
+
+            <div class="container">
+
+                <form action="{% url 'home' %}" method="post">
+                    {% csrf_token %}
                     <div class="row">
+
 
                         <input name="id" value="{{ single.id }}" type="hidden">
                         <input name="number" value="{{ data.number }}" type="hidden">
@@ -54,28 +59,29 @@
                         <div class="col-md-12 card p-2 mb-2 mt-3">
                             <label for="path" class="form-label">Current Data Path</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="path" name="path"
-                                       value="{{ single.audio.url }}">
+                                <input disabled type="text" class="form-control" id="path" name="path"
+                                       value="{{ path }}">
                             </div>
                         </div>
 
                         <div class="col-md-4 p-0">
-                            <div class="card p-2 my-2 p-2 me-2">
+                            <div class="card p-2 my-2 p-2">
                                 <p>Listen Audio</p>
                                 <audio style="width: 100%" class="audio-player mb-5 pt-2" controls>
-                                    <source src="{{ single.audio.url }}" type="audio/mp3">
+                                    <source src="{% static path %}" type="audio/mp3">
                                     Your browser does not support the audio element.
                                 </audio>
                             </div>
 
 
                         </div>
-                        <div class="col-md-8 card p-2 my-2">
-                            <div class="">
+
+                        <div class="col-md-8 pe-1 ">
+                            <div class="card p-2 my-2">
                                 <label for="text-annotation" class="form-label">Text
                                     Annotation</label>
                                 <div class="input-group">
-                                    <textarea style="height: 100px" class="form-control" id="text-annotation"
+                                    <textarea style="height: 110px" class="form-control" id="text-annotation"
                                               name="transcription"
                                     > {{ single.transcript }}</textarea>
                                 </div>
@@ -83,17 +89,48 @@
 
                         </div>
 
-                        <div class="col-md-12 text-center mb-2">
-                            <input class="btn my-3" type="submit" value="Update Transcription">
+                        <div class="col-md-12 text-center px-0">
+                            <input class="btn my-2  form-control" type="submit" value="SUBMIT">
                         </div>
-
 
                     </div>
 
+                </form>
+            </div>
+
+            <div class="container mb-2">
+                <div class="row">
+
+
+                    <div class="col-md-6 text-center m-0 p-0 pe-2">
+                        <form action="{% url 'bad-audio' %}" method="post">
+                            {% csrf_token %}
+                            <input name="obj_id" type="hidden" value="{{ single.id }}">
+                            <input class="btn my-1 form-control" type="submit" value="Bad Audio">
+                        </form>
+                    </div>
+
+                    {% if data.has_next %}
+
+                        <div class="col-md-6 text-center m-0 p-0 ps-2">
+                            <a class="btn my-1 form-control" href="?page={{ data.next_page_number }}"> Skip to Next
+                                Audio</a>
+                        </div>
+
+                    {% endif %}
+
+
                 </div>
 
+            </div>
 
-            </form>
+            {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show notification" role="alert">
+                    You have total annotated {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+
 
         {% endfor %}
     </div>
@@ -113,16 +150,15 @@
                     {% endif %}
 
 
-                    <li class="page-item"><a class="page-link disabled" href="#"> Page {{ data.number }}
-                        of {{ data.paginator.num_pages }}</a></li>
+                    <li class="page-item"><a class="page-link " href="dashboard"> Dashboard</a></li>
 
 
-                    {% if data.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ data.next_page_number }}"> Next<i
-                                    class="bi bi-arrow-right-circle"></i></a>
-                        </li>
-                    {% endif %}
+                    {#                    {% if data.has_next %}#}
+                    {#                        <li class="page-item">#}
+                    {#                            <a class="page-link" href="?page={{ data.next_page_number }}"> Next<i#}
+                    {#                                    class="bi bi-arrow-right-circle"></i></a>#}
+                    {#                        </li>#}
+                    {#                    {% endif %}#}
 
                 </ul>
             </nav>
