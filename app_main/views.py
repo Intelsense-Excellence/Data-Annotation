@@ -3,13 +3,14 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from .models import DataAnnotation, Annotator
 from django.contrib import messages
+import random
 
 
 def home(request):
     if request.method == 'POST':
         annotatorID = request.POST['AnnotatorID']
         obj_id = request.POST['id']
-        number = request.POST['number']
+        # number = request.POST['number']
         txt = request.POST['transcription']
 
         obj = DataAnnotation.objects.get(id=obj_id)
@@ -23,18 +24,19 @@ def home(request):
         messages.info(request, annotator.count)
         annotator.save()
 
-        return redirect(request.path_info + '?page=' + str(number))
+        response = redirect('home')
+        response.set_cookie('idCookies', str(annotatorID))  # Save only the latest 5 queries
+        return response
 
     else:
-        data = DataAnnotation.objects.filter(badAudio=False, isAnnotated=False).order_by('-id')[:10]
-        paginator = Paginator(data, 1)
-        page_number = request.GET.get('page')
-        data = paginator.get_page(page_number)
-
-        path = data[0].audio
-        print(path)
-
-        return render(request, 'home.html', {'data': data, 'path': path})
+        data = DataAnnotation.objects.filter(badAudio=False, isAnnotated=False).order_by('-id')[:20]
+        # paginator = Paginator(data, 1)
+        # page_number = request.GET.get('page')
+        # data = paginator.get_page(page_number)
+        indx = random.randint(0, 19)
+        data = data[indx]
+        idCookies = request.COOKIES.get('idCookies', '').split(',')[0]
+        return render(request, 'home.html', {'data': data, 'idCookies': idCookies})
 
 
 def BadAudio(request):

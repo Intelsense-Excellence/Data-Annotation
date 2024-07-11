@@ -34,7 +34,7 @@
         <div class="col-md-12 text-center my-3">
             <h2>TTS Data Annotation</h2>
         </div>
-        {% for single in data %}
+{#        {% for single in data %}#}
 
 
 
@@ -45,14 +45,14 @@
                     <div class="row">
 
 
-                        <input name="id" value="{{ single.id }}" type="hidden">
-                        <input name="number" value="{{ data.number }}" type="hidden">
+                        <input name="id" value="{{ data.id }}" type="hidden">
+{#                        <input name="number" value="{{ data.number }}" type="hidden">#}
 
 
                         <div class="col-md-12 card p-2">
                             <label for="id" class="form-label">Enter your AnnotatorID</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="id" name="AnnotatorID" required>
+                                <input type="text" class="form-control" id="id" name="AnnotatorID" required value="{{ idCookies }}">
                             </div>
                         </div>
 
@@ -60,7 +60,7 @@
                             <label for="path" class="form-label">Current Data Path</label>
                             <div class="input-group">
                                 <input disabled type="text" class="form-control" id="path" name="path"
-                                       value="{{ path }}">
+                                       value="{{ data.audio }}">
                             </div>
                         </div>
 
@@ -68,7 +68,7 @@
                             <div class="card p-2 my-2 p-2">
                                 <p>Listen Audio</p>
                                 <audio style="width: 100%" class="audio-player mb-5 pt-2" controls>
-                                    <source src="{% static path %}" type="audio/mp3">
+                                    <source src="{% static data.audio %}" type="audio/mp3">
                                     Your browser does not support the audio element.
                                 </audio>
                             </div>
@@ -83,7 +83,7 @@
                                 <div class="input-group">
                                     <textarea style="height: 110px" class="form-control" id="text-annotation"
                                               name="transcription"
-                                    > {{ single.transcript }}</textarea>
+                                    > {{ data.transcript }}</textarea>
                                 </div>
                             </div>
 
@@ -105,19 +105,19 @@
                     <div class="col-md-6 text-center m-0 p-0 pe-2">
                         <form action="{% url 'bad-audio' %}" method="post">
                             {% csrf_token %}
-                            <input name="obj_id" type="hidden" value="{{ single.id }}">
+                            <input name="obj_id" type="hidden" value="{{ data.id }}">
                             <input class="btn my-1 form-control" type="submit" value="Bad Audio">
                         </form>
                     </div>
 
-                    {% if data.has_next %}
-
+{#                    {% if data.has_next %}#}
+{##}
                         <div class="col-md-6 text-center m-0 p-0 ps-2">
-                            <a class="btn my-1 form-control" href="?page={{ data.next_page_number }}"> Skip to Next
+                            <a class="btn my-1 form-control" href="/"> Skip to Next
                                 Audio</a>
                         </div>
-
-                    {% endif %}
+{##}
+{#                    {% endif %}#}
 
 
                 </div>
@@ -132,7 +132,7 @@
             {% endfor %}
 
 
-        {% endfor %}
+{#        {% endfor %}#}
     </div>
 
 
@@ -142,12 +142,12 @@
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-end">
 
-                    {% if data.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ data.previous_page_number }}"><i
-                                    class="bi bi-arrow-left-circle"></i>Previous</a>
-                        </li>
-                    {% endif %}
+{#                    {% if data.has_previous %}#}
+{#                        <li class="page-item">#}
+{#                            <a class="page-link" href="?page={{ data.previous_page_number }}"><i#}
+{#                                    class="bi bi-arrow-left-circle"></i>Previous</a>#}
+{#                        </li>#}
+{#                    {% endif %}#}
 
 
                     <li class="page-item"><a class="page-link " href="dashboard"> Dashboard</a></li>
