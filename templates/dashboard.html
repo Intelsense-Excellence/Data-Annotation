@@ -16,6 +16,30 @@
 <div class="container">
     <div class="row">
 
+        <div class="col-md-12">
+            <ul class="nav justify-content-end">
+
+                {% if user.is_authenticated %}
+
+                    <li class="nav-item me-3">
+                        <p>{{ user.username }}</p>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="btn m-1 menubutton" href="{% url 'login' %}">Sign In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn  m-1  menubutton" aria-current="page" href="{% url 'register' %}">Sign
+                            Up</a></li>
+                {% endif %}
+
+            </ul>
+        </div>
+
+
         <div class="col-md-12 text-center my-3">
             <h2>TTS Data Annotation</h2>
             <hr>
